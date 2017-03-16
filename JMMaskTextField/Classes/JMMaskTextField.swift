@@ -16,16 +16,15 @@ open class JMMaskTextField: UITextField {
             self.maskDelegate?.stringMask = self.stringMask
         }
     }
-    fileprivate weak var realDelegate: UITextFieldDelegate?
     open private(set) var maskDelegate: JMMaskTextFieldDelegate?
     
     override weak open var delegate: UITextFieldDelegate? {
         get {
-            return self.realDelegate
+            return self.maskDelegate?.realDelegate
         }
         
         set (newValue) {
-            self.realDelegate = newValue
+            self.maskDelegate?.realDelegate = newValue
             super.delegate = self.maskDelegate
         }
     }
