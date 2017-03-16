@@ -11,7 +11,7 @@ import UIKit
 open class JMMaskTextField: UITextField {
 
     // damn, maskView is just mask in Swift
-    public private(set) var stringMask: JMStringMask?
+    open private(set) var stringMask: JMStringMask?
     fileprivate weak var realDelegate: UITextFieldDelegate?
     
     override weak open var delegate: UITextFieldDelegate? {
@@ -25,13 +25,13 @@ open class JMMaskTextField: UITextField {
         }
     }
     
-    public var unmaskedText: String? {
+    open var unmaskedText: String? {
         get {
             return self.stringMask?.unmask(string: self.text) ?? self.text
         }
     }
     
-    @IBInspectable public var maskString: String? {
+    @IBInspectable open var maskString: String? {
         didSet {
             guard let maskString = self.maskString else { return }
             self.stringMask = JMStringMask(mask: maskString)
@@ -64,23 +64,23 @@ open class JMMaskTextField: UITextField {
 
 extension JMMaskTextField: UITextFieldDelegate {
     
-    public func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
+    open func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
         return self.realDelegate?.textFieldShouldBeginEditing?(textField) ?? true
     }
     
-    public func textFieldDidBeginEditing(_ textField: UITextField) {
+    open func textFieldDidBeginEditing(_ textField: UITextField) {
         self.realDelegate?.textFieldDidBeginEditing?(textField)
     }
     
-    public func textFieldShouldEndEditing(_ textField: UITextField) -> Bool {
+    open func textFieldShouldEndEditing(_ textField: UITextField) -> Bool {
         return self.realDelegate?.textFieldShouldBeginEditing?(textField) ?? true
     }
     
-    public func textFieldDidEndEditing(_ textField: UITextField) {
+    open func textFieldDidEndEditing(_ textField: UITextField) {
         self.realDelegate?.textFieldDidEndEditing?(textField)
     }
     
-    public func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+    open func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         
         let previousMask = self.stringMask
         let currentText: NSString = textField.text as NSString? ?? ""
@@ -141,11 +141,11 @@ extension JMMaskTextField: UITextFieldDelegate {
         return true
     }
     
-    public func textFieldShouldClear(_ textField: UITextField) -> Bool {
+    open func textFieldShouldClear(_ textField: UITextField) -> Bool {
         return self.realDelegate?.textFieldShouldClear?(textField) ?? true
     }
     
-    public func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+    open func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         return self.realDelegate?.textFieldShouldReturn?(textField) ?? true
     }
     
