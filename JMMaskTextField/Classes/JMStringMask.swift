@@ -13,23 +13,23 @@ fileprivate struct Constants {
     static let numberMaskCharacter: Character = "0"
 }
 
-open struct JMStringMask: Equatable {
+public struct JMStringMask: Equatable {
     
     var mask: String = ""
     
     private init() { }
     
-    open init(mask: String) {
+    public init(mask: String) {
         self.init()
         
         self.mask = mask
     }
     
-    open static func ==(lhs: JMStringMask, rhs: JMStringMask) -> Bool {
+    public static func ==(lhs: JMStringMask, rhs: JMStringMask) -> Bool {
         return lhs.mask == rhs.mask
     }
     
-    open func mask(string: String?) -> String? {
+    public func mask(string: String?) -> String? {
         
         guard let string = string else { return nil }
 
@@ -74,7 +74,7 @@ open struct JMStringMask: Equatable {
         return formattedString
     }
     
-    open func unmask(string: String?) -> String? {
+    public func unmask(string: String?) -> String? {
         
         guard let string = string else { return nil }
         var unmaskedValue = ""
