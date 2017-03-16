@@ -27,25 +27,25 @@ class Tests: XCTestCase {
         textField.maskString = "00000-000"
         
         // pasting
-        _ = textField.textField(textField, shouldChangeCharactersIn: NSRange(location: 0, length: 0), replacementString: "30310-360")
+        _ = textField.maskDelegate?.textField(textField, shouldChangeCharactersIn: NSRange(location: 0, length: 0), replacementString: "30310-360")
         XCTAssertEqual(textField.text, "30310-360")
         
         textField.text = ""
         
         // pasting unformatted
-        _ = textField.textField(textField, shouldChangeCharactersIn: NSRange(location: 0, length: 0), replacementString: "30310360")
+        _ = textField.maskDelegate?.textField(textField, shouldChangeCharactersIn: NSRange(location: 0, length: 0), replacementString: "30310360")
         XCTAssertEqual(textField.text, "30310-360")
         
         textField.text = ""
         
         // pasting invalid
-        _ = textField.textField(textField, shouldChangeCharactersIn: NSRange(location: 0, length: 0), replacementString: "30310-3600")
+        _ = textField.maskDelegate?.textField(textField, shouldChangeCharactersIn: NSRange(location: 0, length: 0), replacementString: "30310-3600")
         XCTAssertEqual(textField.text, "")
         
         textField.text = "30310-360"
         
         // deleting from middle
-        _ = textField.textField(textField, shouldChangeCharactersIn: NSRange(location: 2, length: 1), replacementString: "")
+        _ = textField.maskDelegate?.textField(textField, shouldChangeCharactersIn: NSRange(location: 2, length: 1), replacementString: "")
         XCTAssertEqual(textField.text, "30103-60")
     }
     

@@ -11,8 +11,13 @@ import UIKit
 open class JMMaskTextField: UITextField {
 
     // damn, maskView is just mask in Swift
-    open private(set) var stringMask: JMStringMask?
+    open private(set) var stringMask: JMStringMask? {
+        didSet {
+            self.maskDelegate?.stringMask = self.stringMask
+        }
+    }
     fileprivate weak var realDelegate: UITextFieldDelegate?
+    open private(set) var maskDelegate: JMMaskTextFieldDelegate?
     
     override weak open var delegate: UITextFieldDelegate? {
         get {
@@ -21,7 +26,7 @@ open class JMMaskTextField: UITextField {
         
         set (newValue) {
             self.realDelegate = newValue
-            super.delegate = self
+            super.delegate = self.maskDelegate
         }
     }
     
@@ -57,12 +62,21 @@ open class JMMaskTextField: UITextField {
     }
     
     func commonInit() {
-        super.delegate = self
+        self.maskDelegate = JMMaskTextFieldDelegate()
+        self.maskDelegate?.stringMask = self.stringMask
+        super.delegate = self.maskDelegate
     }
     
 }
 
-extension JMMaskTextField: UITextFieldDelegate {
+open class JMMaskTextFieldDelegate: NSObject {
+    
+    open var stringMask: JMStringMask?
+    fileprivate weak var realDelegate: UITextFieldDelegate?
+    
+}
+
+extension JMMaskTextFieldDelegate: UITextFieldDelegate {
     
     open func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
         return self.realDelegate?.textFieldShouldBeginEditing?(textField) ?? true
