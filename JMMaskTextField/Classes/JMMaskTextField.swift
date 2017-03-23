@@ -113,19 +113,19 @@ extension JMMaskTextFieldDelegate: UITextFieldDelegate {
         let previousMask = self.stringMask
         let currentText: NSString = textField.text as NSString? ?? ""
         
-        if let delegate = self.maskStringDelegate, let textField = textField as? JMMaskTextField {
-            if let maskString = delegate.maskString(textField: textField, willChangeCharactersIn: range, replacementString: string) {
-                self.stringMask = JMStringMask(mask: maskString)
-            } else {
-                self.stringMask = nil
-            }
-        }
-        
         if let realDelegate = self.realDelegate, realDelegate.responds(to: #selector(textField(_:shouldChangeCharactersIn:replacementString:))) {
             let delegateResponse = realDelegate.textField!(textField, shouldChangeCharactersIn: range, replacementString: string)
             
             if !delegateResponse {
                 return false
+            }
+        }
+        
+        if let delegate = self.maskStringDelegate, let textField = textField as? JMMaskTextField {
+            if let maskString = delegate.maskString(textField: textField, willChangeCharactersIn: range, replacementString: string) {
+                self.stringMask = JMStringMask(mask: maskString)
+            } else {
+                self.stringMask = nil
             }
         }
         
