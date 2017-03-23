@@ -13,18 +13,18 @@ open class JMMaskTextField: UITextField {
     // damn, maskView is just mask in Swift
     open private(set) var stringMask: JMStringMask? {
         didSet {
-            self.maskDelegate?.stringMask = self.stringMask
+            self.maskDelegate.stringMask = self.stringMask
         }
     }
-    open private(set) var maskDelegate: JMMaskTextFieldDelegate?
+    open lazy private(set) var maskDelegate: JMMaskTextFieldDelegate = JMMaskTextFieldDelegate()
     
     override weak open var delegate: UITextFieldDelegate? {
         get {
-            return self.maskDelegate?.realDelegate
+            return self.maskDelegate.realDelegate
         }
         
         set (newValue) {
-            self.maskDelegate?.realDelegate = newValue
+            self.maskDelegate.realDelegate = newValue
             super.delegate = self.maskDelegate
         }
     }
@@ -67,9 +67,8 @@ open class JMMaskTextField: UITextField {
     }
     
     func commonInit() {
-        self.maskDelegate = JMMaskTextFieldDelegate()
-        self.maskDelegate?.stringMask = self.stringMask
-        self.maskDelegate?.maskStringDelegate = self.maskStringDelegate
+        self.maskDelegate.stringMask = self.stringMask
+        self.maskDelegate.maskStringDelegate = self.maskStringDelegate
         super.delegate = self.maskDelegate
     }
     
