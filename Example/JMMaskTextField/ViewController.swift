@@ -9,23 +9,28 @@
 import UIKit
 import JMMaskTextField
 
-class ViewController: UIViewController, UITextFieldDelegate {
+class ViewController: UIViewController {
     
-    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        
-        guard let text = textField.text as NSString? else { return true }
+}
+
+extension ViewController: JMMaskStringDelegate {
+    
+    func maskString(textField: JMMaskTextField, willChangeCharactersIn range: NSRange, replacementString string: String) -> String? {
+        guard let text = textField.text as NSString? else {
+            return textField.maskString
+        }
         let newText = text.replacingCharacters(in: range, with: string)
         
-        let maskTextField = textField as! JMMaskTextField
-        guard let unmaskedText = maskTextField.stringMask?.unmask(string: newText) else { return true }
-        
-        if unmaskedText.characters.count >= 11 {
-            maskTextField.maskString = "(00) 0 0000-0000"
-        } else {
-            maskTextField.maskString = "(00) 0000-0000"
+        guard let unmaskedText = textField.stringMask?.unmask(string: newText) else {
+            return textField.maskString
         }
         
-        return true
+        if unmaskedText.characters.count >= 11 {
+            textField.maskString = "(00) 0 0000-0000"
+        } else {
+            textField.maskString = "(00) 0000-0000"
+        }
+        
+        return textField.maskString
     }
-    
 }

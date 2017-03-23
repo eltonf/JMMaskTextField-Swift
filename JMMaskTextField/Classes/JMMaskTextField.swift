@@ -42,6 +42,12 @@ open class JMMaskTextField: UITextField {
         }
     }
     
+    #if TARGET_INTERFACE_BUILDER
+    @IBOutlet open weak var maskStringDelegate: AnyObject?
+    #else
+    open weak var maskStringDelegate: JMMaskStringDelegate?
+    #endif
+    
     override public init(frame: CGRect) {
         super.init(frame: frame)
         
@@ -63,14 +69,23 @@ open class JMMaskTextField: UITextField {
     func commonInit() {
         self.maskDelegate = JMMaskTextFieldDelegate()
         self.maskDelegate?.stringMask = self.stringMask
+        self.maskDelegate?.maskStringDelegate = self.maskStringDelegate
         super.delegate = self.maskDelegate
     }
+    
+}
+
+@objc public protocol JMMaskStringDelegate {
+
+    // Allow the user to change the string mask based on current state
+    func maskString(textField: JMMaskTextField, willChangeCharactersIn range: NSRange, replacementString string: String) -> String?
     
 }
 
 open class JMMaskTextFieldDelegate: NSObject {
     
     open var stringMask: JMStringMask?
+    open var maskStringDelegate: JMMaskStringDelegate?
     fileprivate weak var realDelegate: UITextFieldDelegate?
     
 }
@@ -97,6 +112,14 @@ extension JMMaskTextFieldDelegate: UITextFieldDelegate {
         
         let previousMask = self.stringMask
         let currentText: NSString = textField.text as NSString? ?? ""
+        
+        if let delegate = self.maskStringDelegate, let textField = textField as? JMMaskTextField {
+            if let maskString = delegate.maskString(textField: textField, willChangeCharactersIn: range, replacementString: string) {
+                self.stringMask = JMStringMask(mask: maskString)
+            } else {
+                self.stringMask = nil
+            }
+        }
         
         if let realDelegate = self.realDelegate, realDelegate.responds(to: #selector(textField(_:shouldChangeCharactersIn:replacementString:))) {
             let delegateResponse = realDelegate.textField!(textField, shouldChangeCharactersIn: range, replacementString: string)
